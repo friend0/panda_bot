@@ -1,0 +1,20 @@
+build/default/production/Motor_X_FSM.o:  \
+Motor_X_FSM.c  \
+ES_Configure.h  \
+ ES_Framework.h  \
+ES_General.h  \
+ES_Events.h  \
+ES_Timers.h  \
+ES_TattleTale.h  \
+ BOARD.h  \
+BotFrameworkEvents.h  \
+Bot.h  \
+IO_Ports.h  \
+Stepper.h  \
+RC_Servo.h  \
+pwm.h  \
+ serial.h  \
+AD.h  \
+Motor_X_FSM.h  \
+Motor_Y_FSM.h  \
+Presets_FSM.h 
