@@ -359,6 +359,7 @@ END_ENTRY_MOVING_X:
             }
             break;
 
+            
         case haltHard:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
