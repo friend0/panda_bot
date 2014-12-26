@@ -36,7 +36,7 @@
 #define LOW_REP_NUM 64
 #define TWENTY_KILOHERTZ 20000
 
-#define MIN_RATE 5
+#define MIN_RATE 11
 #define INCREMENT_SIZE 1
 
 static uint8_t countX = 0, countY = 0;
@@ -461,7 +461,7 @@ void __ISR(_TIMER_5_VECTOR, ipl3) Timer5IntHandler() {
 
                         if (currentRate[MOTOR_X] < stepRate[MOTOR_X]) {
                             countX++;
-                            if ((countX % 2) == 0) {
+                            if ((countX % 3) == 0) {
                                 countX = 0;
                                 currentRate[MOTOR_X] += INCREMENT_SIZE;
                                 Stepper_ChangeStepRate(MOTOR_X, currentRate[MOTOR_X]);
@@ -469,7 +469,7 @@ void __ISR(_TIMER_5_VECTOR, ipl3) Timer5IntHandler() {
                         }//deccelerating
                         else if (currentRate[MOTOR_X] > stepRate[MOTOR_X]) {
                             countX++;
-                            if ((countX % 2) == 0) {
+                            if ((countX % 3) == 0) {
                                 countX = 0;
                                 currentRate[MOTOR_X] -= INCREMENT_SIZE;
                                 Stepper_ChangeStepRate(MOTOR_X, currentRate[MOTOR_X]);
@@ -537,7 +537,7 @@ void __ISR(_TIMER_4_VECTOR, ipl3) Timer4IntHandler() {
                         }//accelerating
                         if (currentRate[MOTOR_Y] < stepRate[MOTOR_Y]) {
                             countY++;
-                            if ((countY % 2) == 0) {
+                            if ((countY % 3) == 0) {
                                 countY = 0;
                                 currentRate[MOTOR_Y] += INCREMENT_SIZE;
                                 Stepper_ChangeStepRate(MOTOR_Y, currentRate[MOTOR_Y]);
@@ -545,7 +545,7 @@ void __ISR(_TIMER_4_VECTOR, ipl3) Timer4IntHandler() {
                         }//deccelerating
                         else if (currentRate[MOTOR_Y] > stepRate[MOTOR_Y]) {
                             countY++;
-                            if ((countY % 2) == 0) {
+                            if ((countY % 3) == 0) {
                                 countY = 0;
                                 currentRate[MOTOR_Y] -= INCREMENT_SIZE;
                                 Stepper_ChangeStepRate(MOTOR_Y, currentRate[MOTOR_Y]);

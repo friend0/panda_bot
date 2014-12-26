@@ -1,7 +1,14 @@
 build/default/production/BotFrameworkEvents.o:  \
 BotFrameworkEvents.c  \
- BOARD.h  \
-BotFrameworkEvents.h  \
+Bot.h  \
+ IO_Ports.h  \
+BOARD.h  \
+Stepper.h  \
+RC_Servo.h  \
+pwm.h  \
+serial.h  \
+AD.h  \
+ BotFrameworkEvents.h  \
 ES_ServiceHeaders.h  \
 ES_Configure.h  \
  ES_TimerService.h  \
@@ -9,12 +16,5 @@ ES_Events.h  \
 ES_KeyboardInput.h  \
 Motor_Y_FSM.h  \
  Motor_X_FSM.h  \
-Stepper.h  \
-IO_Ports.h  \
 Servo_Azimuth_FSM.h  \
-Bot.h  \
-RC_Servo.h  \
- pwm.h  \
-serial.h  \
-AD.h  \
 ES_Timers.h 

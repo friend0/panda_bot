@@ -1,13 +1,11 @@
-
+#include "Bot.h"
 #include "BOARD.h"
-//#include "IO_Ports.h"
 #include "BotFrameworkEvents.h"
 #include "ES_ServiceHeaders.h"
 #include "ES_Events.h"
-#include "Bot.h"
 #include "ES_Configure.h"
-#include <stdio.h>
 #include "ES_Timers.h"
+#include <stdio.h>
 #include "Motor_X_FSM.h"
 #include "Motor_Y_FSM.h"
 
@@ -39,7 +37,6 @@ int abs(int n) {
 }
 
 unsigned short getFilteredAD(uint8_t filterNumber) {
-
     if (filterNumber == AZIMUTH_POT) {
         return filteredAz;
     } else if (filterNumber == X_SLIDER) {
@@ -58,6 +55,74 @@ uint8_t check_Steps(void) {
     ES_Event ThisEvent2;
     uint8_t returnVal = FALSE;
 
+    if (Stepper_GetRemainingCount(MOTOR_X) == 0) {
+        if (currentStepperState1 != lastStepperState1) {
+            ThisEvent1.EventType = OUTOFSTEPS;
+            returnVal = TRUE;
+            PostMotorXFSM(ThisEvent1);
+        }
+    }
+    if (Stepper_GetRemainingCount(MOTOR_Y) == 0) {
+        if (currentStepperState2 != lastStepperState2) {
+            ThisEvent2.EventType = OUTOFSTEPS;
+            returnVal = TRUE;
+            PostMotorYFSM(ThisEvent2);
+        }
+    }
+    lastStepperState1 = currentStepperState1;
+    lastStepperState2 = currentStepperState2;
+    return returnVal;
+}
+
+uint8_t check_Decel_Point(void) {
+
+    unsigned int xDecelPoint = getDecelPointX();
+    unsigned int yDecelPoint = getDecelPointY();
+
+    ES_Event ThisEvent1;
+    ES_Event ThisEvent2;
+    uint8_t returnVal = FALSE;
+
+    if (QueryMotorXStatus() == reversingX) {
+        if (getStepsTaken(MOTOR_X) <= getDecelPointX()) {
+            ThisEvent1.EventType = DECELPOINT;
+            returnVal = TRUE;
+            PostMotorXFSM(ThisEvent1);
+        }
+    } else if (QueryMotorXStatus() == forwardingX) {
+        if (getStepsTaken(MOTOR_X) >= getDecelPointX()) {
+            ThisEvent1.EventType = DECELPOINT;
+            returnVal = TRUE;
+            PostMotorXFSM(ThisEvent1);
+        }
+    }
+
+
+    if (QueryMotorYStatus() == reversingY) {
+        if (getStepsTaken(MOTOR_Y) <= getDecelPointY()) {
+            ThisEvent2.EventType = DECELPOINT;
+            returnVal = TRUE;
+            PostMotorYFSM(ThisEvent2);
+        }
+    } else if (QueryMotorYStatus() == forwardingY) {
+        if (getStepsTaken(MOTOR_Y) >= getDecelPointY()) {
+            ThisEvent2.EventType = DECELPOINT;
+            returnVal = TRUE;
+            PostMotorYFSM(ThisEvent2);
+        }
+    }
+
+    return returnVal;
+}
+
+uint8_t check_Accel_Point(void) {
+    static unsigned int lastStepperState1 = 0x00000000;
+    static unsigned int lastStepperState2 = 0x00000000;
+    unsigned int currentStepperState1 = Stepper_GetRemainingCount(0);
+    unsigned int currentStepperState2 = Stepper_GetRemainingCount(1);
+    ES_Event ThisEvent1;
+    ES_Event ThisEvent2;
+    uint8_t returnVal = FALSE;
 
     if (Stepper_GetRemainingCount(MOTOR_X) == 0) {
         if (currentStepperState1 != lastStepperState1) {
@@ -85,7 +150,6 @@ uint8_t check_SpeedMatch(void) {
     ES_Event ThisEvent2;
     uint8_t returnVal = FALSE;
 
-
     if (currentStepperSpeedX == getStepsRateFinal(MOTOR_X)) {
         ThisEvent1.EventType = SPEEDMATCH;
         returnVal = TRUE;
@@ -100,37 +164,6 @@ uint8_t check_SpeedMatch(void) {
     return returnVal;
 }
 
-/*
-uint8_t check_Direction(void) {
-    static unsigned int lastDirectionX = 0x00000000;
-    static unsigned int lastDirectionY = 0x00000000;
-    unsigned int currentDirectionX = Stepper_GetDirection(MOTOR_X);
-    unsigned int currentDirectionY = Stepper_GetDirection(MOTOR_Y);
-    ES_Event ThisEvent1;
-    ES_Event ThisEvent2;
-    uint8_t returnVal = FALSE;
-
-
-    if (Stepper_GetState(MOTOR_X) == stepping) {
-        if (lastDirectionX != currentDirectionX) {
-            ThisEvent1.EventType = DIRECTIONCHANGE;
-            returnVal = TRUE;
-            PostMotorXFSM(ThisEvent1);
-        }
-    }
-    if (Stepper_GetState(MOTOR_Y) == stepping) {
-        if (lastDirectionY != currentDirectionY) {
-            ThisEvent1.EventType = DIRECTIONCHANGE;
-            returnVal = TRUE;
-            PostMotorXFSM(ThisEvent1);
-        }
-    }
-    lastDirectionX = currentDirectionX;
-    lastDirectionY = currentDirectionY;
-    return returnVal;
-}
- */
-
 uint8_t check_Almost_Steps(void) {
     static unsigned int lastStepperStateX = 0x00000000;
     static unsigned int lastStepperStateY = 0x00000000;
@@ -141,14 +174,14 @@ uint8_t check_Almost_Steps(void) {
     uint8_t returnVal = FALSE;
 
 
-    if (Stepper_GetRemainingCount(MOTOR_X) <= (77-5)*2*2) {
+    if (Stepper_GetRemainingCount(MOTOR_X) <= (77 - 5)*2 * 2) {
         if (currentStepperStateX != lastStepperStateX) {
             ThisEvent1.EventType = ALMOSTOUTOFSTEPS;
             returnVal = TRUE;
             PostMotorXFSM(ThisEvent1);
         }
     }
-    if (Stepper_GetRemainingCount(MOTOR_Y) <= (77-5)*2*2) {
+    if (Stepper_GetRemainingCount(MOTOR_Y) <= (77 - 5)*2 * 2) {
         if (currentStepperStateY != lastStepperStateY) {
             ThisEvent2.EventType = ALMOSTOUTOFSTEPS;
             returnVal = TRUE;
@@ -195,37 +228,13 @@ uint8_t check_Limits() {
 
 }
 
-uint8_t check_NearLimits() {
-    static unsigned char lastLimitsX = 0, lastLimitsY = 0;
-    unsigned int currentLimits = Read_Limits();
-    ES_Event ThisEventX, ThisEventY;
-    uint8_t returnVal = FALSE;
-    unsigned int currentPositionX = getStepsTaken(MOTOR_X);
-    unsigned int currentPositionY = getStepsTaken(MOTOR_Y);
-
-    //assign currLimit true or false: true if within 250 steps of a limit
-    unsigned char currLimitsX = ((abs(XSTEPS - currentPositionX) <= 250) || (currentPositionX <= 250));
-    unsigned char currLimitsY = ((abs(YSTEPS - currentPositionY) <= 250) || (currentPositionY <= 250));
-
-
-    if (currLimitsX != lastLimitsX) {
-        ThisEventX.EventType = NEARLIMIT;
-        PostServoAzimuthFSM(ThisEventX);
-    }
-    if(currLimitsY != lastLimitsY){
-        ThisEventY.EventType = NEARLIMIT;
-        PostServoAzimuthFSM(ThisEventY);
-    }
-
-}
-
 uint8_t check_Azimuth(void) {
     static unsigned short temp = 0, *shifter, lastAD_StateA = 0,
             currentAD_StateA = 0, i = 0, difference = 0, count = 0;
     unsigned int sum = 0;
     uint8_t returnVal = FALSE;
     ES_Event ThisEvent1;
-    //Read_ADC_over_I2C();
+
     uart();
 
     currentAD_StateA = ReadAzimuth();
@@ -242,20 +251,11 @@ uint8_t check_Azimuth(void) {
             sum = sum + currentAD_StateA;
         }
     }
-    //}
-
     currentAD_StateA = sum >> SHIFT_ITERATIONS;
-
     filteredAz = (lastAD_StateA - (lastAD_StateA * .05)) + (currentAD_StateA * .05);
-
     currentAD_StateA = filteredAz;
 
-    //    if ((currentAD_StateA != lastAD_StateA) && (count > 2000)) {
-
     if ((currentAD_StateA != lastAD_StateA)) {
-        //if (abs(currentAD_StateA - lastAD_StateA) >= 2) {
-
-        //      printf("Azimuth: %d\n", filteredAz);
         ThisEvent1.EventType = AZIMUTH_ELEVATION_CHANGE;
         ThisEvent1.EventParam = currentAD_StateA;
         PostServoAzimuthFSM(ThisEvent1);

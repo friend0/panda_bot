@@ -50,15 +50,13 @@ typedef enum {
     AZIMUTH_ELEVATION_CHANGE,
     PRESETCHANGE,
     LONG_PRESETCHANGE, //15
-
     PRESETMATCHX,
     PRESETMATCHY,
     PRESETMATCHA,
-
     NOPRESETMATCHX,
     NOPRESETMATCHY,
-    NOPRESETMATCHA,
 
+    NOPRESETMATCHA,
     X_LIMIT,
     Y_LIMIT,
     XY_POT_ZERO,
@@ -67,7 +65,10 @@ typedef enum {
     CALIBRATED,
     ALMOSTOUTOFSTEPS,
     SPEEDMATCH,
-    NEARLIMIT
+    NEARLIMIT,
+
+    DECELPOINT,
+    ACCELPOINT
 
 
 } ES_EventTyp_t;
@@ -103,9 +104,12 @@ static const char *EventNames[] = {"ES_NO_EVENT",
     "CALIBRATED",
     "ALMOSTOUTOFSTEPS",
     "SPEEDMATCH",
-    "NEARLIMIT"};
+    "NEARLIMIT",
 
-#define NUMBEROFEVENTS (30)
+    "DECELPOINT",
+    "ACCELPOINT"};
+
+#define NUMBEROFEVENTS (32)
 
 /****************************************************************************/
 // This are the name of the Event checking funcion header file.
