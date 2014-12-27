@@ -61,9 +61,9 @@ uint8_t getCurrentMatchState(char whichState, unsigned int whichPreset);
 
 typedef struct {
     //0 - presetNumber/xMin;
-    //1 - xPos/xMax;
-    //2 - yPos/yMin;
-    //3 - ePos/yMax;
+    //1 - XPos/xMax;
+    //2 - YPos/yMin;
+    //3 - AzPos/yMax;
     unsigned int positionArr[4];
 } Position;
 

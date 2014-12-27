@@ -1,11 +1,12 @@
-/*
- * File: RoachFSM.h
- * Author: Gabriel H Elkaim
- *
- * Simple flat state machine framework for the Roach project for CMPE-118 to get
- * you started on the project. The FSM simply ping pongs between two states on a
- * timer.
- */
+/**
+* @file Motor_X_FSM.c
+* @author Ryan Rodriguez
+* @date 12/26/14
+* @brief X axis FSM
+*
+* This file runs the state machine for the X axis stepper motor.
+* Path planning and accel/decel are handled here
+*/
 
 /*******************************************************************************
  * MODULE #INCLUDE                                                             *

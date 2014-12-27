@@ -1,9 +1,12 @@
-/*
- * File: MotorXFSM.h
- * Author: J. Edward Carryer
- * Modified: Gabriel H Elkaim
- * Modified: Ryan Rodriguez
- */
+/**
+* @file Motor_Y_FSM.h
+* @author Ryan Rodriguez
+* @date 12/26/14
+* @brief Y axis FSM
+*
+* This file runs the state machine for the Y axis stepper motor.
+* Path planning and accel/decel are handled here
+*/
 
 #ifndef Motor_Y_FSM_H  // <- This should be changed to your own guard on both
 #define Motor_Y_FSM_H  //    of these lines
@@ -29,15 +32,15 @@ static unsigned int yScaleFactor = 1;
 /*******************************************************************************
  * PUBLIC TYPEDEFS                                                             *
  ******************************************************************************/
-
-// typedefs for the states, which are used for the internal definition and also for
-// the return of the query function. Be careful that all state names must be unique
-// if they are exposed in the header file.
-
+/**
+ * @brief The states of the MOTORY FSM
+ */
 typedef enum {
     InitQState, selfCalibrateY, waitingToCalibrateY, waitingY, movingBufferY, movingY, movingY_Preset, deceleratingY, haltHardY
 } Motor_Y_State_t;  // <- Change this name along with your state names
-
+/**
+ * @brief The status of the motor's trajectory
+ */
 typedef enum {
     reversingY, restingY, forwardingY
 } Motor_Y_Status_t;
@@ -45,19 +48,42 @@ typedef enum {
 /*******************************************************************************
  * PUBLIC FUNCTION PROTOTYPES                                                  *
  ******************************************************************************/
+/**
+ * public function to retrieve acceleration point in steps from '0'
+ * @return  return the number the acceleration point in steps from '0'
+ */
 unsigned int getAccelPointY(void);
-
+/**
+* public function to retrieve deceleration point in steps from '0'
+* @return  return the number the acceleration point in steps from '0'
+*/
 unsigned int getDecelPointY(void);
-
+/**
+ * FSM ESFW init
+ * @param  Priority internal priority
+ * @return          T/F
+ */
 uint8_t InitMotorYFSM(uint8_t Priority);
-
+/**
+ * Post events to this FSMs queue
+ * @param  ThisEvent [description]
+ * @return           [description]
+ */
 uint8_t PostMotorYFSM(ES_Event ThisEvent);
 
+/**
+ * FSM state
+ * @return  return the current state
+ */
 Motor_Y_State_t QueryMotorYFSM(void);
-
+/**
+ * Motor status
+ * @return  return the current trajectory of the motor
+ */
 Motor_Y_Status_t QueryMotorYStatus(void);
-
+/**
+ * Run FX for the state machine
+ */
 ES_Event RunMotorYFSM(ES_Event ThisEvent);
 
 #endif /* FSM_MotorY_H */
-

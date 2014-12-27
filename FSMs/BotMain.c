@@ -1,3 +1,12 @@
+/**
+* @file BotMain.c
+* @author Ryan Rodriguez
+* @date 12/26/14
+* @brief main function for execution
+*
+* This file runs the state machine by calling hardware inits, configuring
+* uC functions, and running infinite loop.
+*/
 #include <xc.h>
 #include <stdio.h>
 #include "ES_Configure.h"
@@ -90,6 +99,3 @@ void main(void)
         ;
 
 };
-
-/*------------------------------- Footnotes -------------------------------*/
-/*------------------------------ End of file ------------------------------*/

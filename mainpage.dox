@@ -1,0 +1,9 @@
+/*! \mainpage  Panda Bot Index Page
+ *
+ * \section intro_sec Introduction:
+ * This page is in support of the Panda Bot state machine
+ *
+ * \subsection step1 ToDo1: Testing Duplex communication
+ * \subsection step2 ToDo2: Testing ADC range after filters
+ * \subsection step3 ToDo3: Test Acceleration Profiles and Decel Point performance
+ */

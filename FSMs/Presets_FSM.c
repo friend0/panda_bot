@@ -1,11 +1,13 @@
-/*
- * File: RoachHSM.h
- * Author: Gabriel H Elkaim
- *
- * Simple flat state machine framework for the Roach project for CMPE-118 to get
- * you started on the project. The FSM simply ping pongs between two states on a
- * timer.
- */
+/**
+* @file Presets_FSM.c
+* @author Ryan Rodriguez
+* @date 12/26/14
+* @brief Hardware Initialization file
+*
+* This file is used to interface with eeprom emulation on the Pic32
+* Here, we're using this functionality in a state machine that checks to see if
+* the user is using presets
+*/
 
 #include "dee_emulation_pic32.h"
 
@@ -36,11 +38,6 @@ static char bothXLimits = FALSE, bothYLimits = FALSE;
 
 
 // #include in any sub-state machines header files here
-
-#pragma config FPLLMUL = MUL_18, FPLLIDIV = DIV_2, FPLLODIV = DIV_1, FWDTEN = OFF
-
-#pragma config POSCMOD = HS, FNOSC = PRIPLL, FPBDIV = DIV_2
-
 static unsigned int X_Value_Current = 0;
 static unsigned int Y_Value_Current = 0;
 static unsigned int A_Value_Current = 0;
@@ -96,7 +93,12 @@ static const char *StateNames[] = {"InitUState",
  * PUBLIC FUNCTIONS                                                            *
  ******************************************************************************/
 
-
+/**
+ * Structure used to manage the (5) presets.
+ * Each preset holds the coordinates for the X, Y, and Az coordinates
+ * @param  presetNumber inputs 0-4 correspond to the 5 presets stored
+ * @return              returns a position
+ */
 Position getPresetStruct(unsigned int presetNumber) {
     switch (presetNumber) {
         case 1:
@@ -667,6 +669,3 @@ final2:
 /*******************************************************************************
  * PRIVATE FUNCTIONS                                                           *
  ******************************************************************************/
-
-
-

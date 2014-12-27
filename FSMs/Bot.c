@@ -1,9 +1,13 @@
-/*
- * File:   Bot.c
- * Author: ryarodri
- *
- * Created on December 17, 2013, 11:25 PM
- */
+/**
+* @file Bot.c
+* @author Ryan Rodriguez
+* @date 12/26/14
+* @brief Hardware Initialization file
+*
+* This file is used to initialize GPIO, stepper interrupts, servo, and Uart
+* capabilities.
+*/
+
 #include "bot.h"
 #include "ES_Configure.h"
 #include "dee_emulation_pic32.h"
@@ -92,6 +96,11 @@ unsigned int Read_Limits(void) {
     return presetState;
 }
 
+/**
+ * Hamming weight calculation
+ * @param  n [bit string to be counted]
+   * @return   [the number of ones in n
+ */
 int count_bits(int n) {
     unsigned int c; // c accumulates the total bits set in v
     for (c = 0; n; c++)
@@ -99,30 +108,15 @@ int count_bits(int n) {
     return c;
 }
 
+/**
+ * Check the parity bit
+ * @param  n [bit string to be checked]
+ * @return   [returns parity]
+ */
 BOOL parity_bits(char n) {
     unsigned int c; // c accumulates the total bits set in v
     c = (n & 0x01); //mask parity
     return c;
-}
-
-unsigned short get_AD_VALS(uint8_t index) {
-    switch (index) {
-        case AZIMUTH_POT:
-            return AD_VALS[AZIMUTH_POT];
-            break;
-
-
-        case X_SLIDER:
-            return AD_VALS[X_SLIDER];
-            break;
-
-        case Y_SLIDER:
-            return AD_VALS[Y_SLIDER];
-            break;
-
-        default:
-            return -1;
-    }
 }
 
 void uart(void) {

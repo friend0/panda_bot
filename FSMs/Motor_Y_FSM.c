@@ -1,8 +1,12 @@
-/*
- * File: RoachFSM.h
- * Author: Ryan A Rodriguez
- *
- */
+/**
+* @file Motor_Y_FSM.c
+* @author Ryan Rodriguez
+* @date 12/26/14
+* @brief Y axis FSM
+*
+* This file runs the state machine for the Y axis stepper motor.
+* Path planning and accel/decel are handled here
+*/
 
 /*******************************************************************************
  * MODULE #INCLUDE                                                             *
@@ -22,6 +26,7 @@
  ******************************************************************************/
 #define FORWARD  1
 #define REVERSE  0
+
 uint8_t yDirection = 0, lastYDirection = 0;
 static int Y_Value = 0;
 static int currentPosition = 0;
@@ -314,7 +319,7 @@ END_ENTRY_MOVING_Y:
                 case XY_CHANGE:
                     memEventY = ThisEvent;
                     break;
-                    /*Ï
+                    /*ï¿½
 
                     case X_LIMIT:
                         Stepper_Halt_Hard(MOTOR_X);
@@ -406,4 +411,3 @@ void setDecelPointY(unsigned int decelPoint){
     AccelPointY = decelPoint;
     }
 }
-
