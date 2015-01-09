@@ -24,6 +24,8 @@
 #define ERROR ((int8_t) -1)
 #define SUCCESS ((int8_t) 1)
 
+#define _SUPPRESS_PLIB_WARNING
+
 /**
  * Function: BOARD_Init(void)
  * @param None

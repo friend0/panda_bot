@@ -1,0 +1,21 @@
+build/default/production/FSMs/Servo_Azimuth_FSM.o:  \
+ FSMs/Servo_Azimuth_FSM.c  \
+ /Users/ryanarodriguez/MPLABX/MPLABXProjects/panda_bot.X/ES_Files/ES_Configure.h  \
+ /Users/ryanarodriguez/MPLABX/MPLABXProjects/panda_bot.X/ES_Files/ES_Framework.h  \
+ /Users/ryanarodriguez/MPLABX/MPLABXProjects/panda_bot.X/ES_Files/ES_General.h  \
+ /Users/ryanarodriguez/MPLABX/MPLABXProjects/panda_bot.X/ES_Files/ES_Events.h  \
+ /Users/ryanarodriguez/MPLABX/MPLABXProjects/panda_bot.X/ES_Files/ES_Timers.h  \
+ /Users/ryanarodriguez/MPLABX/MPLABXProjects/panda_bot.X/ES_Files/ES_TattleTale.h  \
+ /Users/ryanarodriguez/MPLABX/MPLABXProjects/panda_bot.X/ES_Files/ES_Configure.h  \
+ /Users/ryanarodriguez/MPLABX/MPLABXProjects/panda_bot.X/hardware/BOARD.h  \
+ /Users/ryanarodriguez/MPLABX/MPLABXProjects/panda_bot.X/hardware/RC_Servo.h  \
+ /Users/ryanarodriguez/MPLABX/MPLABXProjects/panda_bot.X/hardware/Stepper.h  \
+ /Users/ryanarodriguez/MPLABX/MPLABXProjects/panda_bot.X/hardware/IO_Ports.h  \
+ /Users/ryanarodriguez/MPLABX/MPLABXProjects/panda_bot.X/hardware/BOARD.h  \
+ FSMs/Bot.h  \
+ /Users/ryanarodriguez/MPLABX/MPLABXProjects/panda_bot.X/hardware/IO_Ports.h  \
+ /Users/ryanarodriguez/MPLABX/MPLABXProjects/panda_bot.X/hardware/pwm.h  \
+ /Users/ryanarodriguez/MPLABX/MPLABXProjects/panda_bot.X/hardware/serial.h  \
+ /Users/ryanarodriguez/MPLABX/MPLABXProjects/panda_bot.X/hardware/AD.h  \
+ FSMs/Servo_Azimuth_FSM.h  \
+FSMs/Presets_FSM.h 

@@ -126,6 +126,7 @@ void PutChar(char ch) {
 }
 
 void PutChar2(char ch) {
+
     if (getLength(transmitBuffer2) != QUEUESIZE) {
         AddingToTransmit2 = TRUE;
         writeBack(transmitBuffer2, ch);
@@ -299,9 +300,15 @@ void __ISR(_UART1_VECTOR, ipl4) IntUart1Handler(void) {
 
 }
 
-void __ISR(_UART2_VECTOR, ipl4) IntUart2Handler(void) {
+void __ISR(_UART2_VECTOR, ipl3) IntUart2Handler(void) {
     //PORTX05_BIT = ~PORTX05_BIT;
 
+    static int count = 0;
+    count++;
+    if ( count > 100 ) {
+        count = 0;
+        LED_B = ~LED_B;
+    }
 
     if (INTGetFlag(INT_U2RX)) {
         //printf("receiveInt\n");
@@ -349,7 +356,7 @@ void newCircBuffer(CBRef cB) {
 
 // this function frees the Circular Buffer CB Ref
 
-void freeCircBuffer(CBRef* cB) {
+void freeCircBuffer(CBRef * cB) {
     // if it is already null, nothing to free
     if (cB == NULL || *cB == NULL) {
         return;

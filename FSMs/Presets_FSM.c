@@ -350,14 +350,14 @@ ES_Event RunPresetsFSM(ES_Event ThisEvent) {
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     RC_SetPulseTime(AZIMUTH_RC, SERVOCENTER);
-                    ES_Timer_InitTimer(PRESET_TIMER, 2000);
+//                    ES_Timer_InitTimer(PRESET_TIMER, 2000);
                     break;
 
                 case ES_TIMEOUT:
-                    if (ThisEvent.EventParam == PRESET_TIMER) {
+//                    if (ThisEvent.EventParam == PRESET_TIMER) {
                         nextState = noPresets;
                         makeTransition = TRUE;
-                    }
+//                    }
                     break;
                 default:
                     break;

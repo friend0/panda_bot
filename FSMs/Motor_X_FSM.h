@@ -23,9 +23,12 @@
  * PUBLIC #DEFINES                                                             *
  ******************************************************************************/
 #define AD_DIFF_X 1023
-#define XSTEPS 5000
+#define XSTEPS 1023*2
 #define AD_SCALE_X XSTEPS/(AD_DIFF_X)
 static unsigned int xScaleFactor = 1; //temp, reassigned upon calibration
+
+#define MOTORX_TOPSPEED 45
+#define MOTORX_LOWSPEED 1
 
 #define forwardX(x) Stepper_SetSteps(MOTOR_X, FORWARD, x)
 #define reverseX(x) Stepper_SetSteps(MOTOR_X, REVERSE, x)

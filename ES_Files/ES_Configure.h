@@ -15,6 +15,7 @@
 #ifndef CONFIGURE_H
 #define CONFIGURE_H
 
+#define _SUPPRESS_PLIB_WARNING
 
 //defines for keyboard input
 //#define USE_KEYBOARD_INPUT
@@ -117,7 +118,7 @@ static const char *EventNames[] = {"ES_NO_EVENT",
 
 /****************************************************************************/
 // This is the list of event checking functions
-#define EVENT_CHECK_LIST check_Steps, check_Almost_Steps, check_XY_Sliders, check_Azimuth, check_Limits
+#define EVENT_CHECK_LIST check_Steps, check_Almost_Steps, check_XY_Sliders, check_Azimuth, check_Limits, check_Decel_Point
 
 /**********************************************************************/
 // These are the definitions for the post functions to be executed when the

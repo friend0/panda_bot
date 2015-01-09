@@ -1,12 +1,12 @@
 /**
-* @file Motor_X_FSM.c
-* @author Ryan Rodriguez
-* @date 12/26/14
-* @brief X axis FSM
-*
-* This file runs the state machine for the X axis stepper motor.
-* Path planning and accel/decel are handled here
-*/
+ * @file Motor_X_FSM.c
+ * @author Ryan Rodriguez
+ * @date 12/26/14
+ * @brief X axis FSM
+ *
+ * This file runs the state machine for the X axis stepper motor.
+ * Path planning and accel/decel are handled here
+ */
 
 /*******************************************************************************
  * MODULE #INCLUDE                                                             *
@@ -121,9 +121,9 @@ ES_Event RunMotorXFSM(ES_Event ThisEvent) {
         case selfCalibrateX:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
-                    Stepper_Init(MOTOR_X, 45);
+                    Stepper_Init(MOTOR_X, MOTORX_TOPSPEED);
                     reverseX(5000); //reverse to zero point
-                    ES_Timer_InitTimer(MOTOR_X_TIMER, 5000);
+                    ES_Timer_InitTimer(MOTOR_X_TIMER, 3000);
                     break;
 
                 case X_LIMIT:
@@ -148,7 +148,7 @@ ES_Event RunMotorXFSM(ES_Event ThisEvent) {
                     break;
                     //case Y_LIMIT:
 
-                    //TODO: for final, need to set length of timeout s.t there is \
+                    //@TODO: for final, need to set length of timeout s.t there is \
                     an error if we dont hit limit in time
                     //remove calibration throw once this is done
                 case ES_TIMEOUT:
@@ -158,14 +158,15 @@ ES_Event RunMotorXFSM(ES_Event ThisEvent) {
                         NewEvent.EventParam = MOTOR_X;
                         PostMotorYFSM(NewEvent);
 
+                        currentPosition = 0;
+
                         initialX = getFilteredAD(X_SLIDER);
                         newPosition = AD_SCALE_X * initialX;
-                        currentPosition = 0;
                         setStepsTaken(MOTOR_X, 0);
                         positionDifference = currentPosition - newPosition;
 
                         if (positionDifference < 0) {
-                            //forwardX(abs(positionDifference));
+                            forwardX(abs(positionDifference));
                         } else if (positionDifference > 0) {
                             1; //do nothing, already at zero
                         }
@@ -244,7 +245,7 @@ ES_Event RunMotorXFSM(ES_Event ThisEvent) {
                         break;
 
                     case ES_EXIT:
-                        //setStepsRate(MOTOR_X, 55);
+                        ES_Timer_StopTimer(MOTOR_X);
                         break;
 
                     default:
@@ -266,7 +267,13 @@ ES_Event RunMotorXFSM(ES_Event ThisEvent) {
                         positionDifference = currentPosition - newPosition;
                         absPosition = abs(positionDifference);
 
-                        //If we need to move forward
+                        //if position difference is LTZ, then desired position is  ahead
+                        //Need to move forward toward desired position
+                        if(absPosition <= 2){
+                            nextState = waitingX;
+                            makeTransition = TRUE;
+                            goto END_ENTRY_MOVING_X;
+                        }
                         if (positionDifference < 0) {
                             //If we're already moving backward
                             if (CurrentStatus == reversingX) {
@@ -275,15 +282,14 @@ ES_Event RunMotorXFSM(ES_Event ThisEvent) {
                                 goto END_ENTRY_MOVING_X;
                             }
                             //calculate acceleration point(point where we reach const speed)
-                            setAccelPointX(currentPosition + (positionDifference / 3));
+                            //setAccelPointX(currentPosition + (positionDifference / 3));
                             //calculate deceleration point
-                            setDecelPointX(currentPosition + (2 * (positionDifference / 3)));
+                            //setDecelPointX(currentPosition + ((6 * positionDifference) / 8));
 
-                            setStepsRate(MOTOR_X, 45);
+                            setStepsRate(MOTOR_X, MOTORX_TOPSPEED);
                             forwardX(absPosition);
                             CurrentStatus = forwardingX;
-                        }
-                        //If we need to move backward
+                        }//If we need to move backward
                         else {
                             //If we're already moving forward
                             if (CurrentStatus == forwardingX) {
@@ -292,31 +298,33 @@ ES_Event RunMotorXFSM(ES_Event ThisEvent) {
                                 goto END_ENTRY_MOVING_X;
                             }
                             //calculate acceleration point(point where we reach const speed)
-                            setAccelPointX(currentPosition - (positionDifference / 3));
+                            //setAccelPointX(currentPosition - (positionDifference / 3));
                             //calculate deceleration point
-                            setDecelPointX(currentPosition - (2 * (positionDifference / 3)));
+                            //setDecelPointX(currentPosition - ((6 * positionDifference) / 8));
 
-                            setStepsRate(MOTOR_X, 45);
+                            setStepsRate(MOTOR_X, MOTORX_TOPSPEED);
                             reverseX(absPosition);
                             CurrentStatus = reversingX;
                         }
 END_ENTRY_MOVING_X:
                         break;
 
-                    case DECELPOINT:
-                        //PORTX05_BIT = ~PORTX05_BIT;
-                        setStepsRate(MOTOR_X, 5);
-                        break;
+                        /*
+                                            case DECELPOINT:
+                                                //PORTX05_BIT = ~PORTX05_BIT;
+                                                setStepsRate(MOTOR_X, 6);
+                         */ //break;
 
                         //deprecate this method - try decelpoint isntead.
                     case ALMOSTOUTOFSTEPS:
                         //PORTX05_BIT = ~PORTX05_BIT;
-                        setStepsRate(MOTOR_X, 5);
+                        setStepsRate(MOTOR_X, MOTORX_LOWSPEED);
                         break;
 
                     case OUTOFSTEPS:
                         Stepper_Halt(MOTOR_X);
                         ES_Timer_InitTimer(MOTOR_X_TIMER, 250);
+                        CurrentStatus = restingX;
                         break;
 
                         /*
@@ -354,8 +362,8 @@ END_ENTRY_MOVING_X:
         case deceleratingX:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
-                    setStepsRate(MOTOR_X, 5);
-                    ES_Timer_InitTimer(MOTOR_X_TIMER, 1000);
+                    setStepsRate(MOTOR_X, MOTORX_LOWSPEED);
+                    ES_Timer_InitTimer(MOTOR_X_TIMER, 900);
                     break;
 
                 case XY_CHANGE:
@@ -370,9 +378,10 @@ END_ENTRY_MOVING_X:
                      */
 
                 case OUTOFSTEPS:
-                    Stepper_Halt_Hard(MOTOR_X);
-                    //nextState = haltHard;
-                    //makeTransition = TRUE;
+                    Stepper_Halt(MOTOR_X);
+                    nextState = waitingX;
+                    makeTransition = TRUE;
+
                     //ES_Timer_InitTimer(MOTOR_X_TIMER, 55);
                     break;
 
@@ -381,10 +390,13 @@ END_ENTRY_MOVING_X:
                         Stepper_Halt(MOTOR_X);
                         nextState = haltHardX;
                         makeTransition = TRUE;
+                        //CurrentStatus = restingX;
+
                     }
                     break;
 
                 case ES_EXIT:
+                    ES_Timer_StopTimer(MOTOR_X);
                     break;
 
                 default:
@@ -396,7 +408,7 @@ END_ENTRY_MOVING_X:
         case haltHardX:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
-                    ES_Timer_InitTimer(MOTOR_X_TIMER, 250);
+                    ES_Timer_InitTimer(MOTOR_X_TIMER, 200);
                     break;
 
                 case XY_CHANGE:
@@ -412,8 +424,10 @@ END_ENTRY_MOVING_X:
                     break;
 
                 case ES_EXIT:
-                    setStepsRate(MOTOR_X, 5);
+                    //@TODO: Need to make sure this is in MOTORY too!
                     CurrentStatus = restingX;
+                    //setStepsRate(MOTOR_X, MOTORX_LOWSPEED);
+                    ES_Timer_StopTimer(MOTOR_X);
                     break;
 
                 default:

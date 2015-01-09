@@ -11,7 +11,7 @@
  *       the DRV8811 stepper board, it will be stepping at 1/2 the rate specified due to
  *       to toggling the pin on every entry to the ISR (board steps on rising edge).
  *
- * STEPPER_TEST (in the .c file) conditionally compiles the test harness for the code. 
+ * STEPPER_TEST (in the .c file) conditionally compiles the test harness for the code.
  * Make sure it is commented out for module useage.
  *
  * Created on January 2, 2012, 9:36 PM
@@ -45,6 +45,8 @@
 #define NUM_STEPPER_MOTORS 2
 #define MOTOR_X 0
 #define MOTOR_Y 1
+
+#define ACCEL_RATE 2
 
 static unsigned int TOTAL_X_STEPS = 0;
 static unsigned int TOTAL_Y_STEPS = 0;

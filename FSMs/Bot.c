@@ -1,20 +1,19 @@
 /**
-* @file Bot.c
-* @author Ryan Rodriguez
-* @date 12/26/14
-* @brief Hardware Initialization file
-*
-* This file is used to initialize GPIO, stepper interrupts, servo, and Uart
-* capabilities.
-*/
+ * @file Bot.c
+ * @author Ryan Rodriguez
+ * @date 12/26/14
+ * @brief Hardware Initialization file
+ *
+ * This file is used to initialize GPIO, stepper interrupts, servo, and Uart
+ * capabilities.
+ */
 
 #include "bot.h"
 #include "ES_Configure.h"
 #include "dee_emulation_pic32.h"
-#include "i2c_master.h"
-#include "ES_Timers.h"
 #include <plib.h>
 #include <string.h>
+//#include "ES_Timers.h"
 //#include "timers.h"
 
 /*******************************************************************************
@@ -23,7 +22,7 @@
 //#define LEFT_PWM PWM_PORTZ06
 //#define RIGHT_PWM PWM_PORTY12
 
-#define NOPCOUNT 150
+#define NOPCOUNT 1000
 #define DELAY() for(i=0; i< NOPCOUNT; i++) __asm("nop")
 #define LIMIT 8
 
@@ -41,6 +40,10 @@ void Bot_Init(void) {
     //show the world you got a bubble butt
     PORTX05_TRIS = 0;
     PORTX05_BIT = 0;
+
+    LED_B_TRIS = 0;
+    LED_B = 0;
+
 
     //PWM_AddPins(LEFT_PWM | RIGHT_PWM);
     //Hardware Inits
@@ -99,7 +102,7 @@ unsigned int Read_Limits(void) {
 /**
  * Hamming weight calculation
  * @param  n [bit string to be counted]
-   * @return   [the number of ones in n
+ * @return   [the number of ones in n
  */
 int count_bits(int n) {
     unsigned int c; // c accumulates the total bits set in v
@@ -121,6 +124,21 @@ BOOL parity_bits(char n) {
 
 void uart(void) {
     UART1ClearAllErrors();
+    UART2ClearAllErrors();
+
+    /*
+    while (1) {
+        PutChar2('A');
+        PutChar2(0);
+        PutChar2('A');
+        PutChar2(0);
+        //DELAY();
+    }
+     */
+
+
+    //while(!IsTransmitEmpty2())
+
     i = 0;
     if (getLength(receiveBuffer) < LIMIT + 16) goto END;
     temp = peak(receiveBuffer);

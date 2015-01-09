@@ -117,6 +117,8 @@
 #define PORTX11_TRIS TRISDbits.TRISD4
 #define PORTX12_TRIS TRISDbits.TRISD6
 
+
+
 #define PORTX03_BIT PORTFbits.RF5
 #define PORTX04_BIT PORTBbits.RB0
 #define PORTX05_BIT PORTGbits.RG6
@@ -222,6 +224,11 @@
 #define PORTZ10_LAT LATFbits.LATF3 // Also SERIAL port to FTDI
 #define PORTZ11_LAT LATEbits.LATE0
 #define PORTZ12_LAT LATFbits.LATF2 // Also SERIAL port to FTDI
+
+
+//Onboard LED
+#define LED_B_TRIS TRISFbits.TRISF0
+#define LED_B PORTFbits.RF0
 
 // Generic Pin Masks
 #define PIN3  0x0008  //0b0000 0000 0000 1000 - BIT 3

@@ -18,8 +18,8 @@
         <itemPath>ES_Files/ES_Queue.h</itemPath>
         <itemPath>ES_Files/ES_ServiceHeaders.h</itemPath>
         <itemPath>ES_Files/ES_TattleTale.h</itemPath>
-        <itemPath>ES_Files/ES_Timers.h</itemPath>
         <itemPath>ES_Files/ES_TimerService.h</itemPath>
+        <itemPath>ES_Files/ES_Timers.h</itemPath>
       </logicalFolder>
       <logicalFolder name="FSMs" displayName="FSMs" projectFiles="true">
         <itemPath>FSMs/Bot.h</itemPath>
@@ -33,8 +33,6 @@
         <itemPath>hardware/AD.h</itemPath>
         <itemPath>hardware/BOARD.h</itemPath>
         <itemPath>hardware/dee_emulation_pic32.h</itemPath>
-        <itemPath>hardware/i2c.h</itemPath>
-        <itemPath>hardware/i2c_master.h</itemPath>
         <itemPath>hardware/IO_Ports.h</itemPath>
         <itemPath>hardware/LED.h</itemPath>
         <itemPath>hardware/pwm.h</itemPath>
@@ -68,22 +66,18 @@
         <itemPath>FSMs/BotMain.c</itemPath>
         <itemPath>FSMs/Motor_X_FSM.c</itemPath>
         <itemPath>FSMs/Motor_Y_FSM.c</itemPath>
-        <itemPath>FSMs/Presets_FSM.c</itemPath>
         <itemPath>FSMs/Servo_Azimuth_FSM.c</itemPath>
       </logicalFolder>
       <logicalFolder name="hardware" displayName="hardware" projectFiles="true">
         <itemPath>hardware/AD.c</itemPath>
         <itemPath>hardware/BOARD.c</itemPath>
         <itemPath>hardware/dee_emulation_pic32.c</itemPath>
-        <itemPath>hardware/i2c.c</itemPath>
-        <itemPath>hardware/i2c_master.c</itemPath>
         <itemPath>hardware/IO_Ports.c</itemPath>
         <itemPath>hardware/LED.c</itemPath>
         <itemPath>hardware/pwm.c</itemPath>
         <itemPath>hardware/RC_Servo.c</itemPath>
         <itemPath>hardware/serial.c</itemPath>
         <itemPath>hardware/Stepper.c</itemPath>
-        <itemPath>hardware/timers.c</itemPath>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
@@ -125,7 +119,7 @@
         </archiverTool>
         <loading>
           <useAlternateLoadableFile>false</useAlternateLoadableFile>
-          <parseOnProdLoad>true</parseOnProdLoad>
+          <parseOnProdLoad>false</parseOnProdLoad>
           <alternateLoadableFile></alternateLoadableFile>
         </loading>
       </compileType>
@@ -146,7 +140,7 @@
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories"
-                  value="/Users/ryanarodriguez/MPLABX/MPLABXProjects/panda_bot.X;/Users/ryanarodriguez/MPLABX/MPLABXProjects/panda_bot.X/ES_Files;/Users/ryanarodriguez/MPLABX/MPLABXProjects/panda_bot.X/FSMs;/Users/ryanarodriguez/MPLABX/MPLABXProjects/panda_bot.X/hardware"/>
+                  value="/Users/ryanarodriguez/MPLABX/MPLABXProjects/panda_bot.X/ES_Files;/Users/ryanarodriguez/MPLABX/MPLABXProjects/panda_bot.X/FSMs;/Users/ryanarodriguez/MPLABX/MPLABXProjects/panda_bot.X/hardware"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="false"/>
@@ -163,7 +157,6 @@
         <property key="use-indirect-calls" value="false"/>
       </C32>
       <C32-AR>
-        <property key="additional-options-chop-files" value="false"/>
       </C32-AR>
       <C32-AS>
       </C32-AS>
@@ -266,6 +259,7 @@
         <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
         <property key="UART1" value="true"/>
         <property key="UART2" value="true"/>
+        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="memories.aux" value="false"/>
         <property key="memories.bootflash" value="false"/>

@@ -4,10 +4,11 @@
 #include "ES_ServiceHeaders.h"
 #include "ES_Events.h"
 #include "ES_Configure.h"
-#include "ES_Timers.h"
+//#include "ES_Timers.h"
 #include <stdio.h>
 #include "Motor_X_FSM.h"
 #include "Motor_Y_FSM.h"
+#include "stepper.h"
 
 #ifndef MAX
 #define MIN 0
@@ -85,12 +86,14 @@ uint8_t check_Decel_Point(void) {
 
     if (QueryMotorXStatus() == reversingX) {
         if (getStepsTaken(MOTOR_X) <= getDecelPointX()) {
+            PORTX05_BIT = ~PORTX05_BIT;
             ThisEvent1.EventType = DECELPOINT;
             returnVal = TRUE;
             PostMotorXFSM(ThisEvent1);
         }
     } else if (QueryMotorXStatus() == forwardingX) {
         if (getStepsTaken(MOTOR_X) >= getDecelPointX()) {
+            PORTX05_BIT = ~PORTX05_BIT;
             ThisEvent1.EventType = DECELPOINT;
             returnVal = TRUE;
             PostMotorXFSM(ThisEvent1);
@@ -174,14 +177,32 @@ uint8_t check_Almost_Steps(void) {
     uint8_t returnVal = FALSE;
 
 
-    if (Stepper_GetRemainingCount(MOTOR_X) <= (77 - 5)*2 * 2) {
+
+    /*
+    if (Stepper_GetRemainingCount(MOTOR_X) <= (45 - 0)*2) {
         if (currentStepperStateX != lastStepperStateX) {
             ThisEvent1.EventType = ALMOSTOUTOFSTEPS;
             returnVal = TRUE;
             PostMotorXFSM(ThisEvent1);
         }
     }
-    if (Stepper_GetRemainingCount(MOTOR_Y) <= (77 - 5)*2 * 2) {
+    if (Stepper_GetRemainingCount(MOTOR_Y) <= (45 - 0)*2) {
+        if (currentStepperStateY != lastStepperStateY) {
+            ThisEvent2.EventType = ALMOSTOUTOFSTEPS;
+            returnVal = TRUE;
+            PostMotorYFSM(ThisEvent2);
+        }
+    }
+    */
+
+    if (Stepper_GetRemainingCount(MOTOR_X) <= (getStepsRate(MOTOR_X) - MOTORX_LOWSPEED)*ACCEL_RATE) {
+        if (currentStepperStateX != lastStepperStateX) {
+            ThisEvent1.EventType = ALMOSTOUTOFSTEPS;
+            returnVal = TRUE;
+            PostMotorXFSM(ThisEvent1);
+        }
+    }
+    if (Stepper_GetRemainingCount(MOTOR_Y) <= (getStepsRate(MOTOR_Y) - MOTORX_LOWSPEED)*ACCEL_RATE) {
         if (currentStepperStateY != lastStepperStateY) {
             ThisEvent2.EventType = ALMOSTOUTOFSTEPS;
             returnVal = TRUE;
@@ -340,4 +361,3 @@ uint8_t check_XY_Sliders() {
 
     return returnVal;
 }
-

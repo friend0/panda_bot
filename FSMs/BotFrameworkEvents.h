@@ -53,6 +53,8 @@ uint8_t check_NearLimits(void);
 uint8_t check_XY_Sliders(void);
 uint8_t check_Azimuth(void);
 uint8_t check_Azimuth(void);
+uint8_t check_Decel_Point(void);
+uint8_t check_Accel_Point(void);
 
 
 #endif	/* ROACHFRAMEWORKEVENTS_H */

@@ -36,7 +36,7 @@
 #define LOW_REP_NUM 64
 #define TWENTY_KILOHERTZ 20000
 
-#define MIN_RATE 11
+#define MIN_RATE 2
 #define INCREMENT_SIZE 1
 
 static uint8_t countX = 0, countY = 0;
@@ -51,8 +51,8 @@ static unsigned char stepDirs[NUM_STEPPER_MOTORS] = {FORWARD, FORWARD};
 static unsigned long totalStepCounts[NUM_STEPPER_MOTORS] = {0, 0};
 static unsigned short overflowReps[NUM_STEPPER_MOTORS] = {0, 0};
 static unsigned short overflowPeriod[NUM_STEPPER_MOTORS] = {0, 0};
-static unsigned int stepRate[NUM_STEPPER_MOTORS] = {MIN_RATE, MIN_RATE};
-static unsigned int currentRate[NUM_STEPPER_MOTORS] = {MIN_RATE, MIN_RATE};
+static unsigned int stepRate[NUM_STEPPER_MOTORS] = {0, 0};
+static unsigned int currentRate[NUM_STEPPER_MOTORS] = {0, 0};
 static unsigned int rateDifference[NUM_STEPPER_MOTORS] = {0, 0};
 
 static unsigned short timerLoopCount[NUM_STEPPER_MOTORS] = {0, 0};
@@ -461,18 +461,36 @@ void __ISR(_TIMER_5_VECTOR, ipl3) Timer5IntHandler() {
 
                         if (currentRate[MOTOR_X] < stepRate[MOTOR_X]) {
                             countX++;
-                            if ((countX % 3) == 0) {
-                                countX = 0;
-                                currentRate[MOTOR_X] += INCREMENT_SIZE;
-                                Stepper_ChangeStepRate(MOTOR_X, currentRate[MOTOR_X]);
+                            if(currentRate[MOTOR_X] <= 25){
+                                if (((countX % ACCEL_RATE) == 0) && (countX != 0)) {
+                                    countX = 0;
+                                    currentRate[MOTOR_X] += INCREMENT_SIZE;
+                                    Stepper_ChangeStepRate(MOTOR_X, currentRate[MOTOR_X]);
+                                }
+                            }
+                            else{
+                                if (((countX % ACCEL_RATE) == 0) && (countX != 0)) {
+                                    countX = 0;
+                                    currentRate[MOTOR_X] += INCREMENT_SIZE*2;
+                                    Stepper_ChangeStepRate(MOTOR_X, currentRate[MOTOR_X]);
+                                }
                             }
                         }//deccelerating
                         else if (currentRate[MOTOR_X] > stepRate[MOTOR_X]) {
                             countX++;
-                            if ((countX % 3) == 0) {
-                                countX = 0;
-                                currentRate[MOTOR_X] -= INCREMENT_SIZE;
-                                Stepper_ChangeStepRate(MOTOR_X, currentRate[MOTOR_X]);
+                            if (currentRate[MOTOR_X] >= 25){
+                                if (((countX % ACCEL_RATE*2) == 0) && (countX != 0)) {
+                                    countX = 0;
+                                    currentRate[MOTOR_X] -= INCREMENT_SIZE;
+                                    Stepper_ChangeStepRate(MOTOR_X, currentRate[MOTOR_X]);
+                                }
+                            }
+                            else{
+                                if (((countX % ACCEL_RATE) == 0) && (countX != 0)) {
+                                    countX = 0;
+                                    currentRate[MOTOR_X] -= INCREMENT_SIZE;
+                                    Stepper_ChangeStepRate(MOTOR_X, currentRate[MOTOR_X]);
+                                }
                             }
                         }
                         break;
